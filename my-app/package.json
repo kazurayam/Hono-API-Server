@@ -1,7 +1,8 @@
 {
   "name": "my-app",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/server.ts",
+    "client": "bun run --hot src/client.ts"
   },
   "dependencies": {
     "hono": "^4.10.7"

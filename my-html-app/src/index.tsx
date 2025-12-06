@@ -1,5 +1,5 @@
-import { Hono } from 'hono'
-import type { FC } from 'hono/jsx'
+import { Hono } from 'hono';
+import type { FC } from 'hono/jsx';  // FC stands for Function Component
 
 const app = new Hono()
 

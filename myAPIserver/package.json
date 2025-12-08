@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "myAPIserver",
   "scripts": {
     "dev": "bun run --hot src/server.ts",
     "client": "bun run --hot src/client.ts",

@@ -1,3 +1,14 @@
+## bun testでコンポーネントをユニットテストする
+
+```
+cd my-html-app
+bun test ./**/*.test.tsx
+```
+
+
+
+## PlaywrightでE2Eテストをする
+
 See [BunからPlaywrightを使う](https://gist.github.com/toms74209200/d58c127ffa88d7f508e6bf117aaa3b90)
 
 

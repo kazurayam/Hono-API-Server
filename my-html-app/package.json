@@ -2,7 +2,6 @@
   "name": "my-html-app",
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
-    "test": "bunx --bun vitest run",
     "e2e": "bunx playwright test",
     "show": "bunx playwright show-report"
   },
@@ -11,12 +10,10 @@
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^20.0.11",
-    "@playwright/test": "^1.57.0",
     "@testing-library/dom": "^10.4.1",
     "@types/bun": "latest",
     "@types/node": "^24.10.1",
     "happy-dom": "^20.0.11",
-    "playwright": "^1.57.0",
-    "vitest": "^4.0.15"
+    "playwright": "^1.57.0"
   }
 }

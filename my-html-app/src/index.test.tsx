@@ -14,7 +14,7 @@ const Greeting = ({ name } : { name: string}) => {
     return <div>Hello, {name}!</div>
 };
 
-// 2. ./bunfig.toml & ./happydom.ts tunes the global document accessible without browser runtime
+// 2. ./bunfig.toml & ./happydom.ts tunes the global property "document" accessible without the browser runtime
 
 describe('Greeting Component', () => {
     test('renders the correct name', () => {

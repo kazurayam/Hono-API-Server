@@ -1,5 +1,5 @@
 {
-  "name": "my-html-app",
+  "name": "myWEBserver",
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
     "e2e": "bunx playwright test",

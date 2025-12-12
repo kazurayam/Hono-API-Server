@@ -1,28 +1,77 @@
-# Lorem ipsum
+# Kazurayam’s Hono Base Project
+
+- author: kazurayam
+
+- date: Dec, 2025
+
+kazurayamがHonoを使ったプロジェクトを自作するにあたって雛形となるリポジトリを作成しました。
+BunやHonoなど基盤となるソフトウェアをインストールし設定して動作確認するまでの手順をまとめています。
+
+## 雛形の概要
+
+1.  macOXでやる。Windowsに関しては言及しない。
+
+2.  JavaScriptランタイムとしてBunを使用する。Node.jsではなく。
+
+3.  WebフレームワークとしてHonoを使用する。Expressではなく。
+
+4.  TypeScriptでコーディングする。
+
+5.  Bunに組み込まれたビルドツールを使う。Viteではなく。
+
+6.  JSONを応答するAPIサーバとHTMLを応答するWebサーバの二つのサーバを作る。
+
+7.  サーバーサイドでJSXをレンダリングする。クライアントサイドのReactは使わない。
+
+8.  ユニットテストをする。Bunの組み込みテストフレームワークを使用する。
+
+9.  E2Eテストをする。Playwrightを使用する。
+
+10. CloudFlare Worksを使ってエッジサーバーへ配備する。
+
+## Bunのインストール
+
+参考情報: [Bun / Installation](https://bun.com/docs/installation)
+
+    curl -fsSL https://bun.com/install | bash
+
+## Honoのインストール
+
+参考情報: [Hono / Getting Started](https://hono.dev/docs/getting-started)
+
+    bun add hono
+
+## APIサーバを作成する
+
+## Webサーバを作成する
+
+## エッジサーバへ配備する
+
+## Lorem ipsum
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Ut enim ad minim veriam
+### Ut enim ad minim veriam
 
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-### Duis aute irure dolor
+#### Duis aute irure dolor
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
-#### Excepteur sint occaecat cupidatat
+##### Excepteur sint occaecat cupidatat
 
 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-# Quo usque tandem abutere
+## Quo usque tandem abutere
 
 Quo usque tandem abutere, Catilina, patientia nostra?
 
-# Header with (& - \_ : ; ) non Latin Characters
+## Header with (& - \_ : ; ) non Latin Characters
 
 Quam diu etiam furor iste tuus nos eludet?
 
-# Source code inclusion example
+## Source code inclusion example
 
     #!/bin/bash
 
@@ -119,7 +168,7 @@ Quam diu etiam furor iste tuus nos eludet?
       processFile $fname
     done
 
-# Diagram example
+## Diagram example
 
 Generated using [PlantUML](https://plantuml.com/ja/)
 
@@ -127,7 +176,7 @@ Generated using [PlantUML](https://plantuml.com/ja/)
 <img src="https://kazurayam.github.io/adoc2md/diagrams/out/sequence/sequence.png" alt="sequence" />
 </figure>
 
-# 宮沢賢治の詩その1
+## 宮沢賢治の詩その1
 
 心象スケッチ　春と修羅
 
@@ -151,7 +200,7 @@ Generated using [PlantUML](https://plantuml.com/ja/)
     かげとひかりのひとくさりづつ
     そのとほりの心象スケッチです
 
-# 宮沢賢治の詩その2
+## 宮沢賢治の詩その2
 
     雨ニモマケズ
     風ニモマケズ
@@ -192,7 +241,7 @@ Generated using [PlantUML](https://plantuml.com/ja/)
     南無浄行菩薩
     南無安立行菩薩
 
-# Dolorem ipsum
+## Dolorem ipsum
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed tempus urna et pharetra pharetra massa. Praesent tristique magna sit amet purus. Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus. In cursus turpis massa tincidunt dui ut. Massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Facilisis mauris sit amet massa vitae tortor condimentum. Sapien faucibus et molestie ac feugiat sed lectus vestibulum. Eu turpis egestas pretium aenean pharetra magna ac placerat. Nulla aliquet porttitor lacus luctus accumsan tortor posuere. Sit amet purus gravida quis blandit turpis cursus. Suspendisse sed nisi lacus sed. Laoreet non curabitur gravida arcu ac. Dolor sit amet consectetur adipiscing elit pellentesque. Egestas quis ipsum suspendisse ultrices gravida dictum fusce ut placerat.
 

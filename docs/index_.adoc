@@ -1,3 +1,148 @@
+= Kazurayam's Hono Base Project
+
+- author: kazurayam
+- date: Dec, 2025
+
+わたくしkazurayamがこれからHonoを使ったプロジェクトを自作するにあたって雛形として役立つプロジェクトを作り、GitHubリポジトリにしました。Bun、Hono、JSXなど基盤となるソフトウェアをインストールし、プロジェクトを作って、サンプルとしてのアプリが動作することを確認するまでの手順をまとめています。
+
+== KzHonoProjectBaseの概要
+
+1. macOXで仕事する。 LinuxやWindowsは考慮しない。
+2. JavaScriptランタイムBunを使用する。Node.jsではなく。
+3. TypeScriptでコーディングする。JavaScriptではなく。
+4. WebアプリケーションのフレームワークHonoを使用する。Expressではなく。
+5. JSONを応答するAPIサーバとHTMLを応答するWebサーバの二つのサーバを作る。
+6. Bunに組み込まれたビルドツールを使う。Next.jsやViteではなく。
+7. サーバーサイドでJSXをレンダリングする。そのためにReactは無くても大丈夫だからReactは使わない。
+8. ユニットテストをする。Bunの組み込みテストフレームワークを使用する。
+9. E2Eテストをする。Playwrightを使用する。
+10. サンプルアプリをエッジサーバーへ配備する。CloudFlare Worksを使う。
+
+なぜこういう選択をしたか？の理由は説明しません。
+
+== Bunのインストール
+
+参考情報: link:https://bun.com/docs/installation[Bun / Installation]
+
+Bunをインストールする
+
+```
+$ cd ~
+$ curl -fsSL https://bun.com/install | bash
+######################################################################## 100.0%
+bun was installed successfully to ~/.bun/bin/bun
+Run 'bun --help' to get started
+```
+
+Bunのバージョンを目視する
+```
+$ bun --version
+1.3.4
+```
+
+== APIサーバを作る
+
+参考情報: link:https://hono.dev/docs/getting-started/basic[Hono / Getting Started]
+
+まずプロジェクトを格納するディレクトリを作ろう
+
+```
+$ cd ~/tmp
+$ mkdir MyHonoApps
+$ cd MyHonoApps
+```
+
+このディレクトリを $REPO と書き表すことにする。
+
+$REPO の中で下記のコマンドを実行する。
+
+```
+$ bun create hono@latest myAPIserver
+```
+
+`? Which template do you want to use?` と聞かれるので `bun` を選択する。
+
+`? Do you want to install project dependencies now?` と聞かれるので `Yes` を選択する。
+
+`? Which package manager do you want to use?` と聞かれるので `bun` を選択する。
+
+```
+$ bun create hono@latest myAPIserver
+create-hono version 0.19.4
+✔ Using target directory … myAPIserver
+✔ Which template do you want to use? cloudflare-workers
+✔ Do you want to install project dependencies? Yes
+✔ Which package manager do you want to use? bun
+✔ Cloning the template
+✔ Installing project dependencies
+🎉 Copied project files
+Get started with: cd myAPIserver
+```
+
+すると `myAPIserver` というディレクトリが作成される。
+
+```
+:~/tmp/MyHonoApps/myAPIserver
+$ tree -L 2
+.
+├── bun.lock
+├── node_modules
+│   ├── @types
+│   ├── bun-types
+│   ├── hono
+│   └── undici-types
+├── package.json
+├── README.md
+├── src
+│   └── index.ts
+└── tsconfig.json
+
+7 directories, 5 files
+```
+
+`myAPIserver`というディレクトリが作られる。その中にcdして、必要なライブラリをインストールしよう。
+
+```
+$ cd myAPIserver
+$ bun install
+```
+
+`src/index.ts` を開いてみよう。下記のコードが書かれているはずだ。
+
+```
+import { Hono } from 'hono'
+
+const app = new Hono()
+
+app.get('/', (c) => {
+  return c.text('Hello Hono!')
+})
+
+export default app
+```
+
+下記のコマンドを実行するとサーバーが立ち上がるはずだ。 http://127.0.0.1:3000/ をブラウザで開けばこんな画面が見られるはずだ。
+
+image::https://kazurayam.github.io/KzHonoProjectBase/images/myAPIserver_1_index_initial.png[]
+
+Bunの上で最も簡素なHonoのサーバーを立ち上げることができた。
+
+次に `src/index.ts` を編集してAPIサーバのコードに改変していく。
+
+=== エッジサーバへ配備する
+
+=== ユニットテストをする
+
+== Webサーバを作る
+
+=== JSXを使えるようにする
+
+=== ユニットテストがDOMを操作できるようにする
+
+=== E2Eテストをする
+
+
+
 == Lorem ipsum
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

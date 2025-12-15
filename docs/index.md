@@ -1,3 +1,6 @@
+- Table of contents
+{:toc}
+
 # Kazurayam’s Hono Base Project
 
 - author: kazurayam
@@ -5,10 +8,6 @@
 - date: Dec, 2025
 
 わたくしkazurayamがこれからHonoを使ったプロジェクトを自作するにあたって雛形として役立つプロジェクトを作り、GitHubリポジトリにしました。Bun、Hono、JSXなど基盤となるソフトウェアをインストールし、プロジェクトを作って、サンプルとしてのアプリが動作することを確認するまでの手順をまとめています。
-
-## 動機
-
-[Honoの7つのコンセプト, 原文: Hono: The Fastest Web Framework for the Edge](https://zenn.dev/yusukebe/articles/1f3ac394f31f3b) を読んでHonoに興味を持ちました。HonoはEdgeサーバーで動作することを念頭に置いて設計された軽量なWebアプリケーションフレームワークです。Honoを使ってAPIサーバーやWebサーバーを構築し、CloudFlare Workersなどのエッジサーバーへ配備してみたいと思いました。
 
 ## KzHonoProjectBaseの概要
 
@@ -32,8 +31,6 @@
 
 10. サンプルアプリをエッジサーバーへ配備する。CloudFlare Worksを使う。
 
-なぜこういう選択をしたか？の理由は説明しません。
-
 ## Bunのインストール
 
 参考情報: [Bun / Installation](https://bun.com/docs/installation)
@@ -53,7 +50,13 @@ Bunのバージョンを目視する
 
 ## APIサーバを作る
 
-["TypeScript初心者の私がHonoでバックエンドサーバー構築してみた 〜RPCからテストまで" by ゆず at Zenn](https://zenn.dev/yuzunosk55/articles/09275c72cf051b)を参考にした。APIサーバのサンプルコードをコピペさせてもらった。
+このWeb記事を参考にした。
+
+- ["TypeScript初心者の私がHonoでバックエンドサーバー構築してみた 〜RPCからテストまで" by ゆず at Zenn](https://zenn.dev/yuzunosk55/articles/09275c72cf051b)
+
+APIサーバのサンプルコードをコピペさせてもらった。記事がコードを丁寧に説明してくれているので、コードの詳細についてはそちらを参照のこと。kazurayamが実施したプロジェクトの作成手順と操作方法をメモする。
+
+### プロジェクトを作成する
 
 まずプロジェクトを格納するディレクトリを作ろう
 
@@ -67,11 +70,15 @@ $REPO の中で下記のコマンドを実行する。
 
     $ bun create hono@latest myAPIserver
 
-`? Which template do you want to use?` と聞かれるので `bun` を選択する。
+すると対話的に質問が表示される。
 
-`? Do you want to install project dependencies now?` と聞かれるので `Yes` を選択する。
+- `? Which template do you want to use?` と聞かれるので `bun` を選択する。
 
-`? Which package manager do you want to use?` と聞かれるので `bun` を選択する。
+- `? Do you want to install project dependencies now?` と聞かれるので `Yes` を選択する。
+
+- `? Which package manager do you want to use?` と聞かれるので `bun` を選択する。
+
+<!-- -->
 
     $ bun create hono@latest myAPIserver
     create-hono version 0.19.4
@@ -103,7 +110,7 @@ $REPO の中で下記のコマンドを実行する。
 
     7 directories, 5 files
 
-\`myAPIserver\`というディレクトリが作られる。その中にcdして\`bun install\`コマンドを実行しよう。すると与えられた\`package.json\`に従ってライブラリがインストールされる。
+`myAPIserver` というディレクトリが作られる。その中にcdして `bun install` コマンドを実行しよう。すると与えられた `package.json` に従って必要なライブラリがインストールされる。
 
     $ cd myAPIserver
     $ bun install
@@ -134,14 +141,14 @@ $REPO の中で下記のコマンドを実行する。
 
 以上でごく単純なHTTPサーバーを立ち上げることができた。Ctrl+Cでサーバーを停止しよう。
 
+### 最小構成のAPIサーバーを作る
+
 次にJSONを応答するAPIサーバのコードを開発しよう。
 
-\`src/server.ts\`をエディタで開き、下記のコードを記述しよう。このコードを書くにあたって [Zod + OpenAPI](https://hono.dev/examples/zod-openapi) を参考にした。
+`src/server.ts` をエディタで開き、下記のコードを記述しよう。
 
 [myAPIserver/src/server.ts](https://github.com/kazurayam/KzHonoProjectBase/tree/master/myAPIserver/src/server.ts)
 
-    [source,typescript]
-    ----
     import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
     import { swaggerUI } from '@hono/swagger-ui';
 
@@ -245,12 +252,6 @@ $REPO の中で下記のコマンドを実行する。
     export type AppType = typeof sampleRoutes
 
     export default app
-    ----
-
-次に\`myAPIserver/package.json\`をエディタで開き、\`scripts\`セクションに下記の行を追加しよう。
-
-      "scripts": {
-        "dev": "bun run --hot src/server.ts",
 
 ターミナルで次のコマンドを実行しよう。HTTPサーバが立ち上がる。
 
@@ -261,7 +262,63 @@ $REPO の中で下記のコマンドを実行する。
 
 - <http://127.0.0.1/ui>
 
-### エッジサーバへ配備する
+こんな画面が見られるはずだ。
+
+<figure>
+<img src="https://kazurayam.github.io/KzHonoProjectBase/images/myAPIserver_2_API_document.png" alt="myAPIserver 2 API document" />
+</figure>
+
+これは `src/server.ts` に記述したAPIドキュメント生成機能によって実現されている。APIドキュメント生成機能は `src/server.ts` の87行目から99行目に記述されている。
+
+    // ドキュメントを生成
+    app.doc31("/doc", {
+        openapi: "3.1.0",
+        info: {
+            version: "1.0.0",
+            title: "Sample API Document",
+        },
+    });
+
+    // ドキュメントをブラウザで表示
+    app.get("/ui", swaggerUI({ url: "/doc" }))
+
+OpenAPI仕様に準拠したAPIドキュメントがSwaggerUIによって自動生成している。 OpenAPIとSwaggerUIに関しては下記の記事を参照した。
+
+[OpenAPI・Swaggerでインタラクティブな API 仕様ドキュメントを作成する,sato,Zenn](https://zenn.dev/knm/articles/32106f623bd382)
+
+### APIクライアントを作る
+
+APIクライアントを作ろう。 `src/client.ts` を書いた。
+
+    // src/client.ts
+
+    import type { AppType } from './server'
+    import { hc } from 'hono/client'
+
+    // hcがAppType型のAPIに準ずると宣言する。引数にはホストのドメインを記述する。
+    const client = hc<AppType>('http://localhost:3000');
+
+    const res = await client.api.users.$post({
+        json: {
+            name: 'taro',
+            age: 15,
+        },
+    });
+
+    if (res.ok) {
+        const user = await res.json()
+        console.log(res.status, res.statusText, user);
+    } else {
+        console.log(res.status, 'error')
+    }
+
+次に\`myAPIserver/package.json\`をエディタで開き、\`scripts\`セクションに下記の行を追加しよう。
+
+      "scripts": {
+        "dev": "bun run --hot src/server.ts",
+        "client": "bun run --hot src/client.ts",
+
+### APIクライアントを作る
 
 ### ユニットテストをする
 

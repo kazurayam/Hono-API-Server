@@ -372,11 +372,91 @@ APIクライアントを作ろう。 `src/client.ts` を書いた。
      2 expect() calls
     Ran 2 tests across 1 file. [49.00ms]
 
-ユニット・テストが動いた。
+`src/server.ts` を対象とするユニット・テストが動いた。
 
 ## HTMLを応答するWebサーバを作る
 
-### JSXを使えるようにする
+わたしはJSXでHTMLを生成するWebサーバを作りたい。静的HTMLと同じぐらい高速に応答するWebサーバにしたい。Reactが提供する高度な会話的な機能は私のWebアプリに必要ない。だからReactを使わないで、JSXをサーバーサイドでレンダリングしたい。この目標を曲がりなりにも達成するWebサーバを実装した。
+
+[Hono公式ドキュメント "JSX"](https://hono.dev/docs/guides/jsx) のサンプルコードをコピペした。
+
+### ライブラリをインストールする
+
+`bun install` コマンドを実行してライブラリをインストールしよう。
+
+    $ cd $REPO/myWEBserver
+    $ bun install
+    bun install v1.3.4 (5eb2145b)
+
+    + @happy-dom/global-registrator@20.0.11
+    + @testing-library/dom@10.4.1
+    + @types/bun@1.3.3
+    + @types/node@24.10.1
+    + happy-dom@20.0.11
+    + playwright@1.57.0
+    + hono@4.10.7
+
+    29 packages installed [118.00ms]
+
+JSXを使うために `tsconfig.json` に設定を書く必要がある。
+
+    {
+      "compilerOptions": {
+        "strict": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "hono/jsx"
+      }
+    }
+
+HonoはJSXをサポートしているので、JSXのためにライブラリをインストールする必要は無い。
+
+下記の通り `src/index.tsx` を書いた。
+
+    import { Hono } from 'hono';
+    import type { FC } from 'hono/jsx';  // FC stands for Function Component
+
+    const app = new Hono()
+
+    const Layout: FC = (props) => {
+        return (
+            <html>
+                <body>{props.children}</body>
+            </html>
+        );
+    }
+
+    const Top: FC<{ messages: string[] }> = (props: {
+        messages: string []
+    }) => {
+        return (
+            <Layout>
+                <h1>Hello Hono!</h1>
+                <ul>
+                    {props.messages.map((message) => {
+                        return <li>{message}!!</li>
+                    })}
+                </ul>
+            </Layout>
+        );
+    }
+
+    app.get('/', (c) => {
+        const messages = ['Good Morning', 'Good Evening', 'Good Night'];
+        return c.html(<Top messages={messages} />)
+    })
+
+    export default app
+
+WEBサーバを立ち上げよう。
+
+    $ cd $REPO/myWEBserver
+    $ bun dev
+
+ブラウザで <http://localhost:3000/> を開こう。こんな画面が見られるはずだ。
+
+<figure>
+<img src="https://kazurayam.github.io/KzHonoProjectBase/images/myWEBserver_1_index.png" alt="myWEBserver 1 index" />
+</figure>
 
 ### ユニットテストをする、documentオブジェクトにアクセスしながら
 

@@ -110,7 +110,7 @@ $REPO の中で下記のコマンドを実行する。
 
     7 directories, 5 files
 
-`myAPIserver` というディレクトリが作られる。その中にcdして `bun install` コマンドを実行しよう。すると与えられた `package.json` に従って必要なライブラリがインストールされる。
+`myAPIserver` というディレクトリが作られる。その中にcdして `bun install` コマンドを実行しよう。すると与えられた `package.json` の `dependencies` と `testDependencies` に従って必要なライブラリがインストールされる。
 
     $ cd myAPIserver
     $ bun install
@@ -282,9 +282,7 @@ $REPO の中で下記のコマンドを実行する。
     // ドキュメントをブラウザで表示
     app.get("/ui", swaggerUI({ url: "/doc" }))
 
-OpenAPI仕様に準拠したAPIドキュメントがSwaggerUIによって自動生成している。 OpenAPIとSwaggerUIに関しては下記の記事を参照した。
-
-[OpenAPI・Swaggerでインタラクティブな API 仕様ドキュメントを作成する,sato,Zenn](https://zenn.dev/knm/articles/32106f623bd382)
+このコードがSwaggerUIによってOpenAPI仕様に準拠したAPIドキュメントを自動生成している。
 
 ### APIクライアントを作る
 
@@ -318,11 +316,65 @@ APIクライアントを作ろう。 `src/client.ts` を書いた。
         "dev": "bun run --hot src/server.ts",
         "client": "bun run --hot src/client.ts",
 
-### APIクライアントを作る
+`bun dev` コマンドでサーバーを立ち上げた状態で、別のターミナルを開き、下記のように `bun client` コマンドを実行しよう。
+
+    $ bun client
+    200 OK {
+      id: 3,
+      name: "taro",
+      age: 15,
+    }
+
+クライアントがサーバにリクエストを投げたらサーバがJSONを応答した。いいね。
 
 ### ユニットテストをする
 
-## Webサーバを作る
+`src/server.ts` をユニットテストしよう。Bunに組み込まれたtestライブラリを使おう。 `src/server.test.ts` を書いた。
+
+    import { describe, expect, test } from 'bun:test';
+    import { testClient } from 'hono/testing';
+    import app from './server'
+    import type { AppType } from './server'
+
+    describe('userに関するAPI', () => {
+        test('ユーザが作成されて200が返ってくるケース', async () => {
+            const client = testClient<AppType>(app)
+            const res = await client.api.users.$post({
+                json: {
+                    name: 'taro',
+                    age: 15,
+                }
+            })
+            expect(res.status).toBe(200)
+        });
+
+        test('ユーザが作成できず400が返ってくるケース', async () => {
+            const client = testClient<AppType>(app);
+            const res = await client.api.users.$post({
+                json: {
+                    name: null,
+                    age: 15,
+                }
+            })
+            expect(res.status).toBe(400)
+        });
+    });
+
+    $ bun test
+    bun test v1.3.4 (5eb2145b)
+
+    src/server.test.ts:
+    ✓ userに関するAPI > ユーザが作成されて200が返ってくるケース [3.55ms]
+    ✓ userに関するAPI > ユーザが作成できず400が返ってくるケース [0.84ms]
+
+     2 pass
+     0 fail
+     2 expect() calls
+    Ran 2 tests across 1 file. [49.00ms]
+
+ユニット・テストが動いた。
+
+## HTMLを応答するWebサーバを作る
 
 ### JSXを使えるようにする
 

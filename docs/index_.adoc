@@ -90,7 +90,8 @@ Get started with: cd myAPIserver
 
 すると `myAPIserver` というディレクトリが作成される。
 
-```
+[source,shell]
+----
 :~/tmp/MyHonoApps/myAPIserver
 $ tree -L 2
 .
@@ -107,9 +108,9 @@ $ tree -L 2
 └── tsconfig.json
 
 7 directories, 5 files
-```
+----
 
-`myAPIserver` というディレクトリが作られる。その中にcdして `bun install` コマンドを実行しよう。すると与えられた `package.json` に従って必要なライブラリがインストールされる。
+`myAPIserver` というディレクトリが作られる。その中にcdして `bun install` コマンドを実行しよう。すると与えられた `package.json` の `dependencies` と `testDependencies` に従って必要なライブラリがインストールされる。
 
 ```
 $ cd myAPIserver
@@ -118,7 +119,8 @@ $ bun install
 
 `src/index.ts` をエディタで開いてみよう。下記のコードが与えられているはずだ。
 
-```
+[source,typescript]
+----
 import { Hono } from 'hono'
 
 const app = new Hono()
@@ -128,15 +130,16 @@ app.get('/', (c) => {
 })
 
 export default app
-```
+----
 
 下記のコマンドを実行するとサーバーが立ち上がるはずだ。
 
-```
+[source,shell]
+----
 $ cd $REPO/myAPIserver
 $ bun run --hot src/index.ts
 Started development server: http://localhost:3000
-```
+----
 
 http://127.0.0.1:3000/ をブラウザで開けばこんな画面が見られるはずだ。
 
@@ -179,31 +182,65 @@ image::https://kazurayam.github.io/KzHonoProjectBase/images/myAPIserver_2_API_do
 include::../myAPIserver/src/server.ts[lines=87..99]
 ----
 
-OpenAPI仕様に準拠したAPIドキュメントがSwaggerUIによって自動生成している。 OpenAPIとSwaggerUIに関しては下記の記事を参照した。
-
-link:https://zenn.dev/knm/articles/32106f623bd382[OpenAPI・Swaggerでインタラクティブな API 仕様ドキュメントを作成する,sato,Zenn]
+このコードがSwaggerUIによってOpenAPI仕様に準拠したAPIドキュメントを自動生成している。
 
 === APIクライアントを作る
 
 APIクライアントを作ろう。 `src/client.ts` を書いた。
 
-```
+[source,typescript]
+----
 include::../myAPIserver/src/client.ts[]
+----
 
-```
 
 次に`myAPIserver/package.json`をエディタで開き、`scripts`セクションに下記の行を追加しよう。
 
-```
+[source,json]
+----
 include::../myAPIserver/package.json[lines=3..5]
+----
+
+`bun dev` コマンドでサーバーを立ち上げた状態で、別のターミナルを開き、下記のように `bun client` コマンドを実行しよう。
+
+```
+$ bun client
+200 OK {
+  id: 3,
+  name: "taro",
+  age: 15,
+}
 ```
 
-
-=== APIクライアントを作る
+クライアントがサーバにリクエストを投げたらサーバがJSONを応答した。いいね。
 
 === ユニットテストをする
 
-== Webサーバを作る
+`src/server.ts` をユニットテストしよう。Bunに組み込まれたtestライブラリを使おう。 `src/server.test.ts` を書いた。
+
+[source,typescript]
+----
+include::../myAPIserver/src/server.test.ts[]
+----
+
+[source,shell]
+----
+$ bun test
+bun test v1.3.4 (5eb2145b)
+
+src/server.test.ts:
+✓ userに関するAPI > ユーザが作成されて200が返ってくるケース [3.55ms]
+✓ userに関するAPI > ユーザが作成できず400が返ってくるケース [0.84ms]
+
+ 2 pass
+ 0 fail
+ 2 expect() calls
+Ran 2 tests across 1 file. [49.00ms]
+----
+
+ユニット・テストが動いた。
+
+== HTMLを応答するWebサーバを作る
 
 === JSXを使えるようにする
 

@@ -4,4 +4,4 @@ kazurayam がTypeScriptでWebアプリを自作するにあたって出発点と
 JavaScriptランタイム [Bun](https://bun.com/) を使う。
 Webアプリケーション・フレームワーク [Hono](https://hono.dev/) を基盤とする。
 
--> [本編](https://kazurayam.github.io/KazurayamsHonoProjectBase/)
+-> [本編](https://kazurayam.github.io/KzHonoProjectBase/)

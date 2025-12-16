@@ -410,6 +410,8 @@ JSXを使うために `tsconfig.json` に設定を書く必要がある。
 
 HonoはJSXをサポートしているので、JSXのためにライブラリをインストールする必要は無い。
 
+### Webサーバのコードを書く
+
 下記の通り `src/index.tsx` を書いた。
 
     import { Hono } from 'hono';
@@ -515,9 +517,9 @@ WEBサーバを立ち上げよう。
 
 ### happy-domを使う
 
-上記のテストは JavaScript組み込みの `document` オブジェクトを参照している。ブラウザ内蔵のJavaScriptランタイムの上では `document` オブジェクトが参照できて当然だが、Node.jsには `document` オブジェクトが組み込まれていない。だからNode.jsで\`document\` オブジェクトを参照するテストを書きたければ JSDom を利用するのが常道だ。ところがいまわたくしkazurayamはNode.jsでなくBunの上で `document` オブジェクトを参照するテストを書きたい。どうすべきか？
+上記のテストは JavaScript組み込みの documentオブジェクトを参照している。ブラウザ内蔵のJavaScriptランタイムの上では documentオブジェクトが参照できるが、Node.jsには documentオブジェクトが組み込まれていない。だからNode.jsでdocumentオブジェクトを参照するテストを書きたければ JSDom を利用するのが常道だ。ところがいまわたくしkazurayamはNode.jsでなくBunの上でdocumentオブジェクトを参照するテストを書きたい。試してみてわかったのだが、JSDomはBunでは動かない。さて、どうする？
 
-答えば "happy-domを使え" だ。JSDomはBunでは動かない。下記のBunドキュメントを参照のこと。
+答えは "happy-domを使え" だ。下記のBunドキュメントを参照のこと。
 
 - [Write browser DOM tests with Bun and happy-dom](https://bun.com/docs/guides/test/happy-dom)
 
@@ -532,8 +534,10 @@ WEBサーバを立ち上げよう。
     preload = ["./happydom.ts"]
     root = "src"
 
-`bun test` コマンドは `happydom.ts` を最初に実行する。するとhappy-domが実装した `document` オブジェクトが参照可能になる。
+`bun test` コマンドはユーザのテストを実行する前に `happydom.ts` を実行する。するとhappy-domが実装したモノが `document` オブジェクトとして参照可能になる。
 
 ### E2Eテストをする
 
-HTMLを応答するWebサーバをブラウザを介してテストしよう。Playwrightを使って。
+HTMLを応答するWebサーバをWebブラウザを介してE2Eテストしよう。Playwrightを使おう。
+
+## エッジサーバに配備しよう

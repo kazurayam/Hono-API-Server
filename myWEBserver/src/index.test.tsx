@@ -6,7 +6,7 @@ import {beforeEach, describe, expect, test} from 'bun:test'
 // This function is used form server-side rendering JSX into a string
 import {renderToString} from 'hono/jsx/dom/server';
 
-// '@testing-library/dom' provides utilities to query the JSDom document
+// '@testing-library/dom' provides utilities to query the JavaScript document object
 import { screen } from '@testing-library/dom';
 
 // 1. Define a sample Hono JSX component

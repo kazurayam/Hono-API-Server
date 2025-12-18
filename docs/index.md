@@ -674,14 +674,6 @@ myWEBserverを link:CloudFlare Workersに配備しよう。次のドキュメン
 
 わたくしkazurayamはGitHubアカウントを持っている。CloudflareアカウントをGitHubアカウントに連携させる形をとった。
 
-APIトークンを取得しよう。
-
-- <https://dash.cloudflare.com/profile/api-tokens>
-
-ここで "Edit Cloudflare Workers" のテンプレートを使って "KzHonoProjectBase" という名前のAPIトークンを作った。
-
-OSの環境変数 `CLOUDFLARE_API_TOKEN_KzHonoProjectBase` を作ってそこにAPIトークンを設定しよう。`.bash_profile` に書いておくと良い。
-
 ### wranglerをインストールする
 
 `wrangler` CLIをインストールしよう。
@@ -717,6 +709,17 @@ OSの環境変数 `CLOUDFLARE_API_TOKEN_KzHonoProjectBase` を作ってそこに
 
      ⛅️ wrangler 4.55.0
     ───────────────────
+    ▲ [WARNING] No compatibility_date was specified. Using the installed Workers runtime's latest supported date: 2025-12-13.
+
+      ❯❯ Add one to your wrangler.toml file:
+      compatibility_date = "2025-12-13", or
+      ❯❯ Pass it in your terminal: wrangler dev
+      [<SCRIPT>] --compatibility-date=2025-12-13
+
+      See
+      https://developers.cloudflare.com/workers/platform/compatibility-dates/
+      for more information.
+
     ╭──────────────────────────────────────────────────────────────────────╮
     │  [b] open a browser [d] open devtools [c] clear console [x] to exit  │
     ╰──────────────────────────────────────────────────────────────────────╯
@@ -729,14 +732,73 @@ OSの環境変数 `CLOUDFLARE_API_TOKEN_KzHonoProjectBase` を作ってそこに
 <img src="https://kazurayam.github.io/KzHonoProjectBase/images/myWEBserver_3_wrangler_dev.png" alt="myWEBserver 3 wrangler dev" />
 </figure>
 
-### プロジェクトをCloudFlare Workersに配備する
+## プロジェクトをCloudFlare Workersに配備する
 
-`myWEBserver/wrangler.toml` を書いた。
+CloudFlare Workestにアプリを配備するためには `wrangler.toml` を書く必要がある。 `myWEBserver/wrangler.toml` を書いた。
 
-    Unresolved directive in index_.adoc - include::../myWEBserver/wrangler.toml[]
+    name = "kzhonoprojectbase-mywebserver"
+    compatibility_date = "2025-12-13"
 
-### GitHub Actionで自動的にデプロイできるようにする
+前に `bun run start` を実行して wrangler dev を実行した時、コンソールにメッセージが表示された。compatibility\_dateの値をどうすべきかがアドバイスされているから、それに従うのみ。
+
+ターミナル上のコマンドラインでCloudflare WorkersへアプリをデプロイするにはCloudflareによるauthorizationを受ける必要がある。
+
+    $ bunx wrangler login
+    $ bunx wrangler login
+
+     ⛅️ wrangler 4.55.0
+    ───────────────────
+    Attempting to login via OAuth...
+
+するとブラウザが開いてこんな画面が表示された。
+
+<figure>
+<img src="https://kazurayam.github.io/KzHonoProjectBase/images/myWEBserver_4_Allow_Wrangler_access_to_your_Cloudflare_account.png" alt="myWEBserver 4 Allow Wrangler access to your Cloudflare account" />
+</figure>
+
+Allowボタンを押下した。
+
+<figure>
+<img src="https://kazurayam.github.io/KzHonoProjectBase/images/myWEBserver_5_You_have_granded_authorization_to_Wrangler.png" alt="myWEBserver 5 You have granded authorization to Wrangler" />
+</figure>
+
+package.jsonに記述したdeployコマンドを使ってコマンドラインでwranglerを実行してCloudflare Workersへデプロイしよう。
+
+    $ bun run deploy
+    $ wrangler deploy --minify src/index.tsx
+
+     ⛅️ wrangler 4.55.0
+    ───────────────────
+    Total Upload: 27.67 KiB / gzip: 11.25 KiB
+    Uploaded kzhonoprojectbase-mywebserver (3.07 sec)
+    Deployed kzhonoprojectbase-mywebserver triggers (1.23 sec)
+      https://kzhonoprojectbase-mywebserver.kazuaki-urayama.workers.dev
+    Current Version ID: 7432d089-e199-44d5-8ce0-fe1930d40fad
+
+Cloudflareのコンソールを見ると新しいdeploymentが作成されているのがわかる。
+
+<figure>
+<img src="https://kazurayam.github.io/KzHonoProjectBase/images/myWEBserver_6_successful_deploy.png" alt="myWEBserver 6 successful deploy" />
+</figure>
+
+<https://kzhonoprojectbase-mywebserver.kazuaki-urayama.workers.dev/> というURLが作られた。
+
+<figure>
+<img src="https://kazurayam.github.io/KzHonoProjectBase/images/myWEBserver_7_index_on_worker.png" alt="myWEBserver 7 index on worker" />
+</figure>
+
+ああ、たしかにCloudflare Worksの上にわたしが自作したwebアプリがデプロイされている。成功だ。
+
+## GitHub ActionでWranglerを動かしてデプロイできるようにする
+
+コマンドラインで `bun run deploy` を実行する方法でもいいが、それに加えてCI/CD環境を構築したいものだ。GitHub Actionで実現したい。
 
 <https://kasaharu.hatenablog.com/entry/20230904/1693831653> を参考にした
 
 [Wrangler GitHub Action](https://github.com/marketplace/actions/deploy-to-cloudflare-workers-with-wrangler)
+
+APIトークンを取得しよう。
+
+- <https://dash.cloudflare.com/profile/api-tokens>
+
+ここで "Edit Cloudflare Workers" のテンプレートを使って "KzHonoProjectBase" という名前のAPIトークンを作った。
